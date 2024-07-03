@@ -5,12 +5,18 @@ import cookieParser from "cookie-parser";
 import { notFound, errorHandler } from "./middleware/errorMiddleware.js";
 import userRoutes from "./routes/userRoute.js";
 import cors from "cors";
+import bodyParser from "body-parser";
+import videoRouter from "./routes/uploadVideoRoute.js";
 
 dotenv.config();
 connectDataBase();
 
 const PORT = 5000;
 const app = express();
+
+// Middleware to parse JSON bodies
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({extended:true}))
 
 const whitelist = ["http://localhost:3000"];
 const corsOptions = {
@@ -30,6 +36,8 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 app.use("/api/users", userRoutes);
+app.use('/api/users/videos', videoRouter);
+
 
 app.use(notFound);
 app.use(errorHandler);
